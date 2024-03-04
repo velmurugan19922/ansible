@@ -1,0 +1,53 @@
+---
+- name: Update web setup
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Ensure httpd setup
+    yum:
+      name: httpd
+      state: present
+    when: ansible_distribution == "CentOS" or ansible_distribution == "Amazon"
+ 
+  - name: Ensure httpd started
+    service:
+      name: httpd
+      state: started
+    when: ansible_distribution == "CentOS" or ansible_distribution == "Amazon"
+
+  - name: Ensure httpd enable
+    service:
+      name: httpd
+      enable: yes
+    when: ansible_distribution == "CentOS" or ansible_distribution == "Amazon"  
+  
+  - name: Ensure apache2 setup
+    apt:
+      name: nginx
+      state: present
+    when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+  
+  - name: Ensure apache2 started
+    service:
+      name: nginx
+      state: started
+    when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+    #  - name: Ensure apache2 enable
+    #    service:
+    #      name: nginx
+    #      enable: yes
+    #    when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+  - name: Ensure git setup
+    apt:
+      name: git
+      state: present
+    when: ansible_distribution == "CentOS" or ansible_distribution == "Amazon"  
+  
+  - name: clone the code from git
+    git:
+      dest: /var/www/html
+      repo: https://github.com/velmurugan19922/ecomm.git  
+...
